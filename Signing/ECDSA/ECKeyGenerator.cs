@@ -1,22 +1,15 @@
-﻿using Org.BouncyCastle.Asn1.Sec;
-using Org.BouncyCastle.Asn1.X9;
-using Org.BouncyCastle.Crypto;
+﻿using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
 
 namespace Signing.ECDSA
 {
     public static class KeyPairGenerator
     {
-        /* Random source and curve */
-        private static SecureRandom secureRandom = new SecureRandom();
-        private static X9ECParameters curve = SecNamedCurves.GetByName("secp256k1");
-        private static ECDomainParameters domain = new ECDomainParameters (curve.Curve, curve.G, curve.N, curve.H);
-   
         public static ECKeyPair Generate()
         {
-            ECKeyGenerationParameters keygenParams = new ECKeyGenerationParameters(domain, secureRandom);
+            ECKeyGenerationParameters keygenParams 
+                = new ECKeyGenerationParameters(Parameters.DomainParams, Parameters.SecureRandom);
         
             ECKeyPairGenerator generator = new ECKeyPairGenerator();
             generator.Init(keygenParams);

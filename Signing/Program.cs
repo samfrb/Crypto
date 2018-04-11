@@ -1,7 +1,7 @@
 ﻿using System;
-using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Math;
 using Signing.ECDSA;
 
 namespace Signing
@@ -13,23 +13,22 @@ namespace Signing
             var privateKey = KeyPairGenerator.Generate();
             Console.WriteLine(privateKey.ToString() + Environment.NewLine);
             
+            byte[] message = new BigInteger("968236873715988614170569073515315707566766479517").ToByteArray();
+            Signer.Sign(privateKey, message);
         }
     }
 
-    public class Signer
+    public static class Signer
     {
-        public byte[] Sign(ECKeyPair keyPair, byte[] data)
+        public static byte[] Sign(ECKeyPair keyPair, byte[] data)
         {
-            var signerAlgorithm = "SHA256withECDSA";
-
-            ISigner signer = SignerUtilities.GetSigner(signerAlgorithm);
+            ECPrivateKeyParameters priKey 
+                = new ECPrivateKeyParameters("ECDSA", new BigInteger(keyPair.PrivateKey),  Parameters.DomainParams);
             
             ECDsaSigner ecdsaSigner = new ECDsaSigner();
+            ecdsaSigner.Init(true, new ParametersWithRandom(priKey, Parameters.SecureRandom));
             
-            // todo
-            /*signer.Init(true, );
-            signer.BlockUpdate(data, 0, data.Length);
-            byte[] signature = signer.GenerateSignature();*/
+            BigInteger[] signature = ecdsaSigner.GenerateSignature(data);
 
             return new byte[0];
         }
