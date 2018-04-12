@@ -19,7 +19,7 @@ namespace Signing.ECDSA
             ECPrivateKeyParameters privParams = (ECPrivateKeyParameters)keypair.Private;
             ECPublicKeyParameters pubParams = (ECPublicKeyParameters)keypair.Public;
         
-            ECKeyPair k = new ECKeyPair(pubParams.Q.GetEncoded(), privParams.D.ToByteArrayUnsigned());
+            ECKeyPair k = new ECKeyPair(privParams, pubParams);
         
             return k;
         }

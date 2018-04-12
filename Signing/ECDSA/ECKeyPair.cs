@@ -1,18 +1,14 @@
-﻿using Signing.ECDSA;
+﻿using Org.BouncyCastle.Crypto.Parameters;
+using Signing.ECDSA;
 
 namespace Signing
 {
     public class ECKeyPair
     {
-        /// <summary>
-        /// Indicates wether the public key is compressed or not.
-        /// </summary>
-        public bool IsCompressed { get; private set; } = false;
-        
-        public byte[] PublicKey { get; private set; }
-        public byte[] PrivateKey { get; private set; }
+        public ECPrivateKeyParameters PrivateKey { get; private set; }
+        public ECPublicKeyParameters PublicKey { get; private set; }
 
-        public ECKeyPair(byte[] publicKey, byte[] privateKey)
+        public ECKeyPair(ECPrivateKeyParameters privateKey, ECPublicKeyParameters publicKey)
         {
             PublicKey = publicKey;
             PrivateKey = privateKey;
@@ -20,7 +16,7 @@ namespace Signing
 
         public override string ToString()
         {
-            return "Prv : " + PrivateKey.FormatKey() + "\nPub : " + PublicKey.FormatKey();
+            return "Prv : " + PrivateKey.D.ToByteArrayUnsigned().FormatKey() + "\nPub : " + PublicKey.Q.GetEncoded().FormatKey();
         }
     }
 }
